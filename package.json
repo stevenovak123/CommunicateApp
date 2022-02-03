@@ -9,8 +9,11 @@
 	"author": "Steve Dsouza",
 	"license": "MIT",
 	"dependencies": {
+		"@emotion/react": "^11.7.1",
+		"@emotion/styled": "^11.6.0",
 		"dotenv": "^16.0.0",
 		"express": "^4.17.2",
+		"framer-motion": "^5.6.0",
 		"nodemon": "^2.0.15"
 	}
 }
