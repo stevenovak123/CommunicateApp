@@ -1,18 +1,25 @@
 const express = require('express')
+const connectDb = require('./config/db')
 const dotenv = require('dotenv').config()
+const colors = require('colors')
+const userRoutes = require('./routes/userRoutes')
+const { notFound, errorHandler } = require('./middleware/errorMiddleware')
+
+// initialize backend
 const app = express()
 
+// connect to db
+connectDb()
+app.use(express.json()) //accept json data from front end
 app.get('/', (req, res) => {
-	res.send('API is active')
+	res.send('API')
 })
 
-app.get('/api/chat', (req, res) => {
-	res.send('Chat')
-})
+app.use('/api/user', userRoutes)
 
-app.get('/api/chat/:id', (req, res) => {
-	const singleChat = chats.find((c) => c._id === req.params.id)
-	res.send(singleChat)
-})
+app.use(notFound)
+app.use(errorHandler)
+
 const PORT = process.env.PORT || 8000
-app.listen(PORT, console.log(`Server started at ${PORT}`))
+
+app.listen(PORT, console.log(`Server started at ${PORT}`.yellow.bold))
