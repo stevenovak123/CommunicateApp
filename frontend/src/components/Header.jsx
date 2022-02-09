@@ -24,13 +24,17 @@ import { GoChevronDown, GoSearch } from 'react-icons/go'
 import { ChatState } from '../context/ChatProvider'
 import { ProfileModal } from './ProfileModal'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { ChatLoader } from '../components/Chats/ChatLoader'
+import { UserListItem } from './User/UserListItem'
+
 export const Header = () => {
 	const [search, setSearch] = useState('')
 	const [searchResult, setSearchResult] = useState([])
 	const [loading, setLoading] = useState(false)
 	const [chatLoading, setChatLoading] = useState()
 
-	const { user } = ChatState()
+	const { user, setSelectedChat, chats, setChats, selcetedChat } = ChatState()
 
 	const { isOpen, onClose, onOpen } = useDisclosure()
 	const navigate = useNavigate()
@@ -41,7 +45,7 @@ export const Header = () => {
 		navigate('/')
 	}
 
-	const handleSearch = () => {
+	const handleSearch = async () => {
 		if (!search) {
 			Toast({
 				title: 'Please enter something in search',
@@ -52,7 +56,50 @@ export const Header = () => {
 			})
 		}
 		try {
-		} catch (error) {}
+			setLoading(true)
+			const config = {
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			}
+			const { data } = await axios.get(`api/user?search=${search}`, config)
+			setLoading(false)
+			setSearchResult(data)
+		} catch (error) {
+			Toast({
+				title: 'Error Occurred',
+				description: 'Failed to load the result',
+				status: 'error',
+				duration: 5000,
+				isClosable: true,
+				position: 'top-left',
+			})
+		}
+	}
+
+	const accessChat = async (userId) => {
+		try {
+			setChatLoading(true)
+			const config = {
+				headers: {
+					'Content-type': 'application/json',
+					Authorization: `Bearer ${user.token}`,
+				},
+			}
+			const { chatData } = await axios.post('api/chat', { userId }, config)
+
+			setSelectedChat(data)
+			setChatLoading(false)
+		} catch (error) {
+			Toast({
+				title: 'Error Occurred',
+				description: error.message,
+				status: 'error',
+				duration: 5000,
+				isClosable: true,
+				position: 'top-left',
+			})
+		}
 	}
 
 	return (
@@ -121,6 +168,17 @@ export const Header = () => {
 							/>
 							<Button onClick={handleSearch}>Go</Button>
 						</Box>
+						{loading ? (
+							<ChatLoader />
+						) : (
+							searchResult?.map((user) => (
+								<UserListItem
+									key={user._id}
+									user={user}
+									handleFunction={() => accessChat(user._id)}
+								/>
+							))
+						)}
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>
