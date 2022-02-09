@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
 	Box,
 	Container,
@@ -11,8 +11,17 @@ import {
 } from '@chakra-ui/react'
 import { Login } from '../components/Auth/Login'
 import { Signup } from '../components/Auth/Signup'
+import { useNavigate } from 'react-router-dom'
 
 export const Homepage = () => {
+	let navigate = useNavigate()
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem('userInfo'))
+		if (user) {
+			navigate('/chat')
+		}
+	}, [])
+
 	return (
 		<Container maxW='xl' centerContent>
 			<Box
@@ -43,6 +52,7 @@ export const Homepage = () => {
 							<Login />
 						</TabPanel>
 						<TabPanel>
+							``
 							<Signup />
 						</TabPanel>
 					</TabPanels>
