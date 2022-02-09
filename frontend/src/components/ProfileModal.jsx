@@ -13,7 +13,6 @@ import {
 	Text,
 } from '@chakra-ui/react'
 import React from 'react'
-import { IconBase } from 'react-icons/lib'
 import { ViewIcon } from '@chakra-ui/icons'
 export const ProfileModal = ({ user, children }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()

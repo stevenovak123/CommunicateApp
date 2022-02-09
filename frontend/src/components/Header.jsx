@@ -3,6 +3,12 @@ import {
 	Avatar,
 	Box,
 	Button,
+	Drawer,
+	DrawerBody,
+	DrawerContent,
+	DrawerHeader,
+	DrawerOverlay,
+	Input,
 	Menu,
 	MenuButton,
 	MenuDivider,
@@ -10,6 +16,8 @@ import {
 	MenuList,
 	Text,
 	Tooltip,
+	useDisclosure,
+	useToast,
 } from '@chakra-ui/react'
 import { AiFillBell } from 'react-icons/ai'
 import { GoChevronDown, GoSearch } from 'react-icons/go'
@@ -23,10 +31,28 @@ export const Header = () => {
 	const [chatLoading, setChatLoading] = useState()
 
 	const { user } = ChatState()
+
+	const { isOpen, onClose, onOpen } = useDisclosure()
 	const navigate = useNavigate()
+	const Toast = useToast()
+
 	const handleLogout = () => {
 		localStorage.removeItem('userInfo')
 		navigate('/')
+	}
+
+	const handleSearch = () => {
+		if (!search) {
+			Toast({
+				title: 'Please enter something in search',
+				status: 'warning',
+				duration: 5000,
+				isClosable: true,
+				position: 'top-left',
+			})
+		}
+		try {
+		} catch (error) {}
 	}
 
 	return (
@@ -40,7 +66,7 @@ export const Header = () => {
 				p='5px 10px 5px 10px'
 				borderWidth='5px'>
 				<Tooltip label='Search Users to chat' hasArrow placement='bottom-end'>
-					<Button variant='ghost'>
+					<Button variant='ghost' onClick={onOpen}>
 						<GoSearch />
 						<Text
 							d={{
@@ -81,6 +107,23 @@ export const Header = () => {
 					</Menu>
 				</div>
 			</Box>
+			<Drawer placement='left' onClose={onClose} isOpen={isOpen}>
+				<DrawerOverlay />
+				<DrawerContent>
+					<DrawerHeader borderBottomWidth='5px'>Search Users</DrawerHeader>
+					<DrawerBody>
+						<Box d='flex' pb={2}>
+							<Input
+								placeholder='Search By name or email'
+								mr='2'
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+							/>
+							<Button onClick={handleSearch}>Go</Button>
+						</Box>
+					</DrawerBody>
+				</DrawerContent>
+			</Drawer>
 		</>
 	)
 }
