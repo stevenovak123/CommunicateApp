@@ -15,13 +15,20 @@ import { AiFillBell } from 'react-icons/ai'
 import { GoChevronDown, GoSearch } from 'react-icons/go'
 import { ChatState } from '../context/ChatProvider'
 import { ProfileModal } from './ProfileModal'
-export const SideDrawer = () => {
+import { useNavigate } from 'react-router-dom'
+export const Header = () => {
 	const [search, setSearch] = useState('')
 	const [searchResult, setSearchResult] = useState([])
 	const [loading, setLoading] = useState(false)
 	const [chatLoading, setChatLoading] = useState()
 
 	const { user } = ChatState()
+	const navigate = useNavigate()
+	const handleLogout = () => {
+		localStorage.removeItem('userInfo')
+		navigate('/')
+	}
+
 	return (
 		<>
 			<Box
@@ -69,7 +76,7 @@ export const SideDrawer = () => {
 								<MenuItem>My Profile</MenuItem>
 							</ProfileModal>
 							<MenuDivider />
-							<MenuItem>Logout </MenuItem>
+							<MenuItem onClick={handleLogout}>Logout </MenuItem>
 						</MenuList>
 					</Menu>
 				</div>
