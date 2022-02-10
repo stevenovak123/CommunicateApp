@@ -9,8 +9,9 @@ import {
 	VStack,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { response } from 'express'
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 export const Login = () => {
 	const [email, setEmail] = useState()
@@ -19,8 +20,11 @@ export const Login = () => {
 	const [loading, setLoading] = useState(false)
 
 	const toast = useToast()
-	const navigate = useNavigate()
-
+	const history = useHistory()
+	const guestUser = () => {
+		setEmail('guest@example.com')
+		setPassword('123456')
+	}
 	const handleShow = () => {
 		setShow(!show)
 	}
@@ -44,12 +48,13 @@ export const Login = () => {
 					'Content-type': 'application/json',
 				},
 			}
-			const { data } = await axios.post(
-				'api/user/login',
+			const data = await axios.post(
+				'/api/user/login',
 				{ email, password },
 				config
 			)
-
+			if (response.data) {
+			}
 			toast({
 				title: 'Login Successful',
 				status: 'success',
@@ -58,8 +63,9 @@ export const Login = () => {
 				position: 'bottom',
 			})
 			localStorage.setItem('userInfo', JSON.stringify(data))
+
 			setLoading(false)
-			navigate('/chat')
+			history.push('/chats')
 		} catch (error) {
 			toast({
 				title: 'Error',
@@ -77,6 +83,7 @@ export const Login = () => {
 				<FormLabel>Email</FormLabel>
 				<Input
 					placeholder='Enter Your Email'
+					type='email'
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 				/>
@@ -110,10 +117,7 @@ export const Login = () => {
 				colorScheme='red'
 				width='100%'
 				style={{ marginTop: 15 }}
-				onClick={() => {
-					setEmail('guest@example.com')
-					setPassword('123456')
-				}}>
+				onClick={guestUser}>
 				Login as Guest
 			</Button>
 		</VStack>

@@ -14,6 +14,7 @@ import {
 	MenuDivider,
 	MenuItem,
 	MenuList,
+	Spinner,
 	Text,
 	Tooltip,
 	useDisclosure,
@@ -23,7 +24,7 @@ import { AiFillBell } from 'react-icons/ai'
 import { GoChevronDown, GoSearch } from 'react-icons/go'
 import { ChatState } from '../context/ChatProvider'
 import { ProfileModal } from './ProfileModal'
-import { useNavigate } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { ChatLoader } from '../components/Chats/ChatLoader'
 import { UserListItem } from './User/UserListItem'
@@ -34,15 +35,15 @@ export const Header = () => {
 	const [loading, setLoading] = useState(false)
 	const [chatLoading, setChatLoading] = useState()
 
-	const { user, setSelectedChat, chats, setChats, selcetedChat } = ChatState()
+	const { user, setSelectedChat, chats, setChats } = ChatState()
 
 	const { isOpen, onClose, onOpen } = useDisclosure()
-	const navigate = useNavigate()
+	const history = useHistory()
 	const Toast = useToast()
 
 	const handleLogout = () => {
 		localStorage.removeItem('userInfo')
-		navigate('/')
+		history.push('/')
 	}
 
 	const handleSearch = async () => {
@@ -57,6 +58,9 @@ export const Header = () => {
 		}
 		try {
 			setLoading(true)
+			if (!search) {
+				return
+			}
 			const config = {
 				headers: {
 					Authorization: `Bearer ${user.token}`,
@@ -86,7 +90,10 @@ export const Header = () => {
 					Authorization: `Bearer ${user.token}`,
 				},
 			}
-			const { chatData } = await axios.post('api/chat', { userId }, config)
+			const { data } = await axios.post('api/chat', { userId }, config)
+			if (!chats.find((c) => c._id === data._id)) {
+				setChats([data, ...chats])
+			}
 
 			setSelectedChat(data)
 			setChatLoading(false)
@@ -179,6 +186,7 @@ export const Header = () => {
 								/>
 							))
 						)}
+						{chatLoading && <Spinner ml='auto' d='flex' />}
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>

@@ -11,23 +11,23 @@ import {
 } from '@chakra-ui/react'
 import { Login } from '../components/Auth/Login'
 import { Signup } from '../components/Auth/Signup'
-import { useNavigate } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 export const Homepage = () => {
-	let navigate = useNavigate()
+	const history = useHistory()
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem('userInfo'))
 		if (user) {
-			navigate('/chat')
+			history.push('/chats')
 		}
-	}, [])
+	}, [history])
 
 	return (
 		<Container maxW='xl' centerContent>
 			<Box
 				display='flex'
 				justifyContent='center'
-				p={3}
+				p='3'
 				bg={'white'}
 				w='100%'
 				m='40px 0 15px 0'
@@ -52,7 +52,6 @@ export const Homepage = () => {
 							<Login />
 						</TabPanel>
 						<TabPanel>
-							``
 							<Signup />
 						</TabPanel>
 					</TabPanels>

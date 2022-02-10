@@ -1,19 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter as Router } from 'react-router-dom'
+
 import './index.css'
 import App from './App'
 import { ChakraProvider } from '@chakra-ui/react'
 import ChatProvider from './context/ChatProvider'
+import { BrowserRouter } from 'react-router-dom'
 ReactDOM.render(
-	<React.StrictMode>
-		<ChakraProvider>
-			<Router>
-				<ChatProvider>
-					<App />
-				</ChatProvider>
-			</Router>
-		</ChakraProvider>
-	</React.StrictMode>,
+	<ChakraProvider>
+		<BrowserRouter>
+			<ChatProvider>
+				<App />
+			</ChatProvider>
+		</BrowserRouter>
+	</ChakraProvider>,
+
 	document.getElementById('root')
 )

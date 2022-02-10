@@ -5,7 +5,7 @@ import { VStack } from '@chakra-ui/layout'
 import { useToast } from '@chakra-ui/toast'
 import axios from 'axios'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 export const Signup = () => {
 	const [show, setShow] = useState(false)
@@ -17,7 +17,7 @@ export const Signup = () => {
 	const [picture, setPicture] = useState()
 	const [loading, setLoading] = useState(false)
 
-	const navigate = useNavigate()
+	const history = useHistory()
 	const toast = useToast()
 
 	const handleClick = () => {
@@ -95,7 +95,7 @@ export const Signup = () => {
 				},
 			}
 			const { data } = await axios.post(
-				'/api/user',
+				'api/user',
 				{
 					name,
 					email,
@@ -114,7 +114,7 @@ export const Signup = () => {
 
 			localStorage.setItem('userInfo', JSON.stringify(data))
 			setLoading(false)
-			navigate('/chat')
+			history.push('/chats')
 		} catch (error) {
 			toast({
 				title: 'Error',

@@ -13,7 +13,7 @@ const accessChat = asyncHandler(async (req, res) => {
 		return res.sendStatus(400)
 	}
 
-	let isChat = await Chat.find({
+	var isChat = await Chat.find({
 		isGroupChat: false,
 		$and: [
 			{ users: { $elemMatch: { $eq: req.user._id } } },
@@ -25,7 +25,7 @@ const accessChat = asyncHandler(async (req, res) => {
 
 	isChat = await User.populate(isChat, {
 		path: 'latestMessage.sender',
-		select: 'name picture email',
+		select: 'name pic email',
 	})
 
 	if (isChat.length > 0) {
@@ -64,7 +64,7 @@ const fetchChats = asyncHandler(async (req, res) => {
 			.then(async (results) => {
 				results = await User.populate(results, {
 					path: 'latestMessage.sender',
-					select: 'name picture email',
+					select: 'name pic email',
 				})
 				res.status(200).send(results)
 			})

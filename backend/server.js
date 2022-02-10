@@ -5,13 +5,12 @@ const colors = require('colors')
 const userRoutes = require('./routes/userRoutes')
 const chatRoutes = require('./routes/chatRoutes')
 const { notFound, errorHandler } = require('./middleware/errorMiddleware')
-
 // initialize backend
 const app = express()
 
 // connect to db
 connectDb()
-app.use(express.json()) //accept json data from front end
+app.use(express.json())
 app.get('/', (req, res) => {
 	res.send('API')
 })
