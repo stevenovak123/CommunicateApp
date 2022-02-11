@@ -9,7 +9,7 @@ import {
 	VStack,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 export const Login = () => {
@@ -27,7 +27,6 @@ export const Login = () => {
 	const handleShow = () => {
 		setShow(!show)
 	}
-	const token = localStorage.getItem('userInfo')
 	const submitHandler = async () => {
 		setLoading(true)
 		if (!email || !password) {
@@ -73,8 +72,6 @@ export const Login = () => {
 				isCloseable: true,
 				position: 'bottom',
 			})
-			throw new Error()
-			console.log(error.message)
 		}
 	}
 	return (
