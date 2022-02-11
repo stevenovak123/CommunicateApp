@@ -14,16 +14,45 @@ import {
 	Input,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
+import axios from 'axios'
+import { ChatState } from '../../context/ChatProvider'
 
 export const GroupChatModal = ({ children }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [groupChatname, setGroupChatName] = useState()
 	const [selectedUsers, setSelectedUsers] = useState()
-	const [search, setSearch] = useState([])
-	const [searchResult, setSearchResult] = useState('')
+	const [search, setSearch] = useState('')
+	const [loading, setLoading] = useState([])
+	const [searchResult, setSearchResult] = useState([])
 	const toast = useToast()
-
-	const handleSearch = () => {}
+	const { user, chats, setChats } = ChatState()
+	const handleSearch = async (query) => {
+		setSearch(query)
+		if (!query) {
+			return
+		}
+		try {
+			setLoading(true)
+			const config = {
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			}
+			const { data } = await axios.get(`api/user?search=${search}`, config)
+			setLoading(false)
+			setSearchResult(data)
+		} catch (error) {
+			toast({
+				title: 'Error occurred',
+				description: 'Failed to load the search results',
+				status: 'error',
+				duration: 5000,
+				isClosable: true,
+				position: 'bottom-left',
+			})
+		}
+	}
+	const handleSubmit = () => {}
 	return (
 		<>
 			<span onClick={onOpen}>{children}</span>
@@ -50,17 +79,18 @@ export const GroupChatModal = ({ children }) => {
 						<FormControl>
 							<Input
 								placeholder='Add Members'
-								mb={3}
+								mb={1}
 								onChange={(e) => handleSearch(e.target.value)}
 							/>
 						</FormControl>
+						{/* Selected Users */}
+						{/* Render searched users */}
 					</ModalBody>
 
 					<ModalFooter>
-						<Button colorScheme='blue' mr={3} onClick={onClose}>
-							Close
+						<Button colorScheme='blue' onClick={handleSubmit}>
+							Create Group
 						</Button>
-						<Button variant='ghost'>Secondary Action</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
