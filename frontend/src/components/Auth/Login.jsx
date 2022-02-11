@@ -13,8 +13,8 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 export const Login = () => {
-	const [email, setEmail] = useState()
-	const [password, setPassword] = useState()
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
 	const [show, setShow] = useState(false)
 	const [loading, setLoading] = useState(false)
 
@@ -28,10 +28,6 @@ export const Login = () => {
 		setShow(!show)
 	}
 	const token = localStorage.getItem('userInfo')
-	useEffect(() => {
-		const token = localStorage.getItem('userInfo')
-		console.log(`useEffect rendered ${token}`)
-	}, [token])
 	const submitHandler = async () => {
 		setLoading(true)
 		if (!email || !password) {
@@ -66,7 +62,6 @@ export const Login = () => {
 				position: 'bottom',
 			})
 			localStorage.setItem('userInfo', JSON.stringify(data))
-			console.log('localstorage Set')
 			setLoading(false)
 			history.push('/chats')
 		} catch (error) {
