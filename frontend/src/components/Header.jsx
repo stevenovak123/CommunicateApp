@@ -20,8 +20,8 @@ import {
 	useDisclosure,
 	useToast,
 } from '@chakra-ui/react'
-import { AiFillBell } from 'react-icons/ai'
-import { GoChevronDown, GoSearch } from 'react-icons/go'
+import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons'
+import { GoSearch } from 'react-icons/go'
 import { ChatState } from '../context/ChatProvider'
 import { ProfileModal } from './ProfileModal'
 import { useHistory } from 'react-router-dom'
@@ -138,12 +138,12 @@ export const Header = () => {
 				<div>
 					<Menu>
 						<MenuButton p={1}>
-							<AiFillBell />
+							<BellIcon />
 						</MenuButton>
 						{/* <MenuList/> */}
 					</Menu>
 					<Menu>
-						<MenuButton as={Button} rightIcon={<GoChevronDown />}>
+						<MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
 							<Avatar
 								size='sm'
 								cursor='pointer'

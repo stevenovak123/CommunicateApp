@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
+import { GroupChatModal } from './GroupChatModal'
 import { ChatState } from '../../context/ChatProvider'
 import axios from 'axios'
 import { AddIcon } from '@chakra-ui/icons'
@@ -58,12 +59,14 @@ export const Chats = () => {
 				justifyContent='space-between'
 				alignItems='center'>
 				My Chats
-				<Button
-					d='flex'
-					fontSize={{ base: '17px', md: '10px', lg: '17px' }}
-					leftIcon={<AddIcon />}>
-					New Group Chat
-				</Button>
+				<GroupChatModal>
+					<Button
+						d='flex'
+						fontSize={{ base: '17px', md: '10px', lg: '17px' }}
+						leftIcon={<AddIcon />}>
+						New Group Chat
+					</Button>
+				</GroupChatModal>
 			</Box>
 			<Box
 				d='flex'
