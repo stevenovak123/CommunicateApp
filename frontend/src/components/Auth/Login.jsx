@@ -9,8 +9,7 @@ import {
 	VStack,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { response } from 'express'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 export const Login = () => {
@@ -28,6 +27,11 @@ export const Login = () => {
 	const handleShow = () => {
 		setShow(!show)
 	}
+	const token = localStorage.getItem('userInfo')
+	useEffect(() => {
+		const token = localStorage.getItem('userInfo')
+		console.log(`useEffect rendered ${token}`)
+	}, [token])
 	const submitHandler = async () => {
 		setLoading(true)
 		if (!email || !password) {
@@ -48,13 +52,12 @@ export const Login = () => {
 					'Content-type': 'application/json',
 				},
 			}
-			const data = await axios.post(
+			const { data } = await axios.post(
 				'/api/user/login',
 				{ email, password },
 				config
 			)
-			if (response.data) {
-			}
+
 			toast({
 				title: 'Login Successful',
 				status: 'success',
@@ -63,7 +66,7 @@ export const Login = () => {
 				position: 'bottom',
 			})
 			localStorage.setItem('userInfo', JSON.stringify(data))
-
+			console.log('localstorage Set')
 			setLoading(false)
 			history.push('/chats')
 		} catch (error) {
@@ -75,6 +78,8 @@ export const Login = () => {
 				isCloseable: true,
 				position: 'bottom',
 			})
+			throw new Error()
+			console.log(error.message)
 		}
 	}
 	return (
