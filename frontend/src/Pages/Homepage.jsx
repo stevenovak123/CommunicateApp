@@ -12,9 +12,11 @@ import {
 import { Login } from '../components/Auth/Login'
 import { Signup } from '../components/Auth/Signup'
 import { useHistory } from 'react-router-dom'
+import { ChatState } from '../context/ChatProvider'
 
 export const Homepage = () => {
 	const history = useHistory()
+	const { user } = ChatState()
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem('userInfo'))
 		if (user) {
