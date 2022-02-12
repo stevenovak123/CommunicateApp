@@ -16,16 +16,21 @@ import {
 import React, { useState } from 'react'
 import axios from 'axios'
 import { ChatState } from '../../context/ChatProvider'
+import { UserListItem } from '../User/UserListItem'
 
 export const GroupChatModal = ({ children }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [groupChatname, setGroupChatName] = useState()
-	const [selectedUsers, setSelectedUsers] = useState()
+	const [selectedUsers, setSelectedUsers] = useState([])
 	const [search, setSearch] = useState('')
 	const [loading, setLoading] = useState([])
 	const [searchResult, setSearchResult] = useState([])
+
 	const toast = useToast()
 	const { user, chats, setChats } = ChatState()
+
+	const handleGroup = () => {}
+
 	const handleSearch = async (query) => {
 		setSearch(query)
 		if (!query) {
@@ -84,6 +89,19 @@ export const GroupChatModal = ({ children }) => {
 							/>
 						</FormControl>
 						{/* Selected Users */}
+						{loading ? (
+							<div>Search Users to Chat</div>
+						) : (
+							searchResult?.slice(0, 4).map((user) => (
+								<UserListItem
+									key={user._id}
+									user={user}
+									handleFunction={() => {
+										handleGroup(user)
+									}}
+								/>
+							))
+						)}
 						{/* Render searched users */}
 					</ModalBody>
 
