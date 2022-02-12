@@ -11,13 +11,14 @@ import {
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { ChatState } from '../../context/ChatProvider'
 
 export const Login = () => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [show, setShow] = useState(false)
 	const [loading, setLoading] = useState(false)
-
+	const { setUser } = ChatState()
 	const toast = useToast()
 	const history = useHistory()
 	const guestUser = () => {
@@ -62,6 +63,7 @@ export const Login = () => {
 			})
 			localStorage.setItem('userInfo', JSON.stringify(data))
 			setLoading(false)
+			setUser(data)
 			history.push('/chats')
 		} catch (error) {
 			toast({
