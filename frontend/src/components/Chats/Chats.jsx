@@ -5,7 +5,8 @@ import { ChatState } from '../../context/ChatProvider'
 import axios from 'axios'
 import { AddIcon } from '@chakra-ui/icons'
 import { ChatLoader } from './ChatLoader'
-export const Chats = () => {
+import { getSender } from '../config/ChatLogic'
+export const Chats = ({ fetchAgain }) => {
 	const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState()
 
 	const [loggedUser, setLoggedUser] = useState()
@@ -31,13 +32,11 @@ export const Chats = () => {
 			})
 		}
 	}
-	const getSender = (loggedUser, users) => {
-		return users[0]._id === loggedUser._id ? users[1].name : users[0].name
-	}
+
 	useEffect(() => {
 		setLoggedUser(JSON.parse(localStorage.getItem('userInfo')))
 		fetchChats()
-	}, [])
+	}, [fetchAgain])
 
 	return (
 		<Box
@@ -48,7 +47,8 @@ export const Chats = () => {
 			bg='white'
 			w={{ base: '100%', md: '31%' }}
 			borderRadius='lg'
-			borderWidth='1px'>
+			borderWidth='1px'
+		>
 			<Box
 				pb={3}
 				px={3}
@@ -57,13 +57,15 @@ export const Chats = () => {
 				d='flex'
 				w='100%'
 				justifyContent='space-between'
-				alignItems='center'>
+				alignItems='center'
+			>
 				My Chats
 				<GroupChatModal>
 					<Button
 						d='flex'
 						fontSize={{ base: '17px', md: '10px', lg: '17px' }}
-						leftIcon={<AddIcon />}>
+						leftIcon={<AddIcon />}
+					>
 						New Group Chat
 					</Button>
 				</GroupChatModal>
@@ -76,7 +78,8 @@ export const Chats = () => {
 				w='100%'
 				h='100%'
 				borderRadius='lg'
-				overflow='hidden'>
+				overflow='hidden'
+			>
 				{chats ? (
 					<Stack overflowY='scroll'>
 						{chats.map((chat) => (
@@ -88,7 +91,8 @@ export const Chats = () => {
 								px={3}
 								py={2}
 								borderRadius='lg'
-								key={chat._id}>
+								key={chat._id}
+							>
 								<Text>
 									{!chat.isGroupChat
 										? getSender(loggedUser, chat.users)
