@@ -4,6 +4,7 @@ import { ChatState } from '../../context/ChatProvider'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { ProfileModal } from '../ProfileModal'
 import { getSender, getSenderInfo } from '../config/ChatLogic'
+import { UpdateGroupModal } from './UpdateGroupModal'
 export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 	const { user, selectedChat, setSelectedChat } = ChatState()
 
@@ -34,13 +35,26 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 						) : (
 							<>
 								{selectedChat.chatName.toUpperCase()}
-								{/* <UpdateGroupChatModal
+								<UpdateGroupModal
 									fetchAgain={fetchAgain}
 									setFetchAgain={setFetchAgain}
-								/> */}
+								/>
 							</>
 						)}
 					</Text>
+					<Box
+						d='flex'
+						flexDir='column'
+						justifyContent='flex-end'
+						p={3}
+						bg='#E8E8E8'
+						w='100%'
+						h='100%'
+						borderRadius='lg'
+						overflowY='hidden'
+					>
+						{/* Message */}
+					</Box>
 				</>
 			) : (
 				<Box d='flex' alignItems='center' justifyContent='center' h='100%'>
