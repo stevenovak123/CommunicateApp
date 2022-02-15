@@ -1,4 +1,4 @@
-import { Box, CloseButton } from '@chakra-ui/react'
+import { Box, CloseButton, Text } from '@chakra-ui/react'
 import React from 'react'
 
 export const UserBadgeItem = ({ user, handleFunction }) => {
@@ -8,15 +8,17 @@ export const UserBadgeItem = ({ user, handleFunction }) => {
 			py={1}
 			borderRadius='lg'
 			m={1}
-			mb={2}
+			mb={1}
 			variant='solid'
-			fontSize={10}
+			fontSize={14}
 			backgroundColor='purple'
 			cursor='pointer'
 			color='white'
-			onClick={handleFunction}>
-			{user.name}
-			<CloseButton pl='1' size='sm' />
+			onClick={handleFunction}
+			d='flex'
+		>
+			<Text>{user.name}</Text>
+			<CloseButton size='sm' pl={1} />
 		</Box>
 	)
 }
