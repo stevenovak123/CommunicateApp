@@ -100,7 +100,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
 			groupAdmin: req.user,
 		})
 
-		const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
+		const fullGroupChat = await Chat.find({ _id: groupChat._id })
 			.populate('users', '-password')
 			.populate('groupAdmin', '-password')
 
