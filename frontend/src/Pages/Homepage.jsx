@@ -12,11 +12,9 @@ import {
 import { Login } from '../components/Auth/Login'
 import { Signup } from '../components/Auth/Signup'
 import { useHistory } from 'react-router-dom'
-import { ChatState } from '../context/ChatProvider'
 
 export const Homepage = () => {
 	const history = useHistory()
-	const { user } = ChatState()
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem('userInfo'))
 		if (user) {
@@ -34,7 +32,8 @@ export const Homepage = () => {
 				w='100%'
 				m='40px 0 15px 0'
 				borderRadius='lg'
-				borderWidth='1px'>
+				borderWidth='1px'
+			>
 				<Text fontSize='4xl'>Chat App</Text>
 			</Box>
 			<Box
@@ -43,7 +42,8 @@ export const Homepage = () => {
 				w='100%'
 				p={4}
 				borderRadius='lg'
-				borderWidth='1px'>
+				borderWidth='1px'
+			>
 				<Tabs variant='soft-rounded' colorScheme='gray'>
 					<TabList mb='1em'>
 						<Tab width='50%'>Login</Tab>

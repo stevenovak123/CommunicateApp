@@ -8,12 +8,14 @@ import {
 	Text,
 	useToast,
 } from '@chakra-ui/react'
+import './styles.css'
 import { ChatState } from '../../context/ChatProvider'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { ProfileModal } from '../ProfileModal'
 import { getSender, getSenderInfo } from '../config/ChatLogic'
 import { UpdateGroupModal } from './UpdateGroupModal'
 import axios from 'axios'
+import { ScrollableChat } from './ScrollableChat'
 export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 	const { user, selectedChat, setSelectedChat } = ChatState()
 	const [messages, setMessages] = useState([])
@@ -21,10 +23,6 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 	const [newMessage, setnewMessage] = useState('')
 
 	const toast = useToast()
-
-	useEffect(() => {
-		fetchMessages()
-	}, [selectedChat])
 
 	const fetchMessages = async () => {
 		if (!selectedChat) {
@@ -42,6 +40,7 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 				config
 			)
 			setMessages(data)
+			console.log(data)
 			setLoading(false)
 		} catch (error) {
 			toast({
@@ -64,7 +63,7 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 						Authorization: `Bearer ${user.token}`,
 					},
 				}
-
+				setnewMessage('')
 				const { data } = await axios.post(
 					'api/message',
 					{
@@ -73,9 +72,9 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 					},
 					config
 				)
-				console.log(data)
-				setnewMessage('')
+
 				setMessages([...messages, data])
+				console.log(data)
 			} catch (error) {
 				toast({
 					title: 'Error Occured',
@@ -92,6 +91,9 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 	const typingHandler = (e) => {
 		setnewMessage(e.target.value)
 	}
+	useEffect(() => {
+		fetchMessages()
+	}, [selectedChat])
 	return (
 		<>
 			{selectedChat ? (
@@ -122,6 +124,7 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 								<UpdateGroupModal
 									fetchAgain={fetchAgain}
 									setFetchAgain={setFetchAgain}
+									fetchMessages={fetchMessages}
 								/>
 							</>
 						)}
@@ -146,7 +149,9 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 								margin='auto'
 							/>
 						) : (
-							<div>{/* All messages */}</div>
+							<div className='messages'>
+								<ScrollableChat messages={messages} />
+							</div>
 						)}
 						<FormControl onKeyDown={sendMessage} isRequired mt={3}>
 							<Input

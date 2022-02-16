@@ -22,7 +22,11 @@ import { ChatState } from '../../context/ChatProvider'
 import { UserBadgeItem } from '../User/UserBadgeItem'
 import { UserListItem } from '../User/UserListItem'
 
-export const UpdateGroupModal = ({ fetchAgain, setFetchAgain }) => {
+export const UpdateGroupModal = ({
+	fetchAgain,
+	setFetchAgain,
+	fetchMessages,
+}) => {
 	const [groupChatName, setGroupChatName] = useState()
 	const [search, setSearch] = useState('')
 	const [searchResult, setSearchResult] = useState([])
@@ -126,6 +130,7 @@ export const UpdateGroupModal = ({ fetchAgain, setFetchAgain }) => {
 			)
 			removedUser._id === user.id ? setSelectedChat() : setSelectedChat(data)
 			setFetchAgain(!fetchAgain)
+			fetchMessages()
 			setLoading(false)
 		} catch (error) {}
 	}
