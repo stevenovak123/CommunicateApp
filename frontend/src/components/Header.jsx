@@ -28,6 +28,8 @@ import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { ChatLoader } from '../components/Chats/ChatLoader'
 import { UserListItem } from './User/UserListItem'
+import { getSender } from './config/ChatLogic'
+import NotificationBadge, { Effect } from 'react-notification-badge'
 
 export const Header = () => {
 	const [search, setSearch] = useState('')
@@ -35,7 +37,14 @@ export const Header = () => {
 	const [loading, setLoading] = useState(false)
 	const [chatLoading, setChatLoading] = useState()
 
-	const { user, setSelectedChat, chats, setChats } = ChatState()
+	const {
+		user,
+		setSelectedChat,
+		chats,
+		setChats,
+		notification,
+		setNotification,
+	} = ChatState()
 
 	const { isOpen, onClose, onOpen } = useDisclosure()
 	const history = useHistory()
@@ -118,7 +127,8 @@ export const Header = () => {
 				bg='white'
 				w='100%'
 				p='5px 10px 5px 10px'
-				borderWidth='5px'>
+				borderWidth='5px'
+			>
 				<Tooltip label='Search Users to chat' hasArrow placement='bottom-end'>
 					<Button variant='ghost' onClick={onOpen}>
 						<GoSearch />
@@ -127,7 +137,8 @@ export const Header = () => {
 								base: 'none',
 								md: 'flex',
 							}}
-							px='4'>
+							px='4'
+						>
 							Search User
 						</Text>
 					</Button>
@@ -138,9 +149,28 @@ export const Header = () => {
 				<div>
 					<Menu>
 						<MenuButton p={1}>
+							<NotificationBadge
+								effect={Effect.SCALE}
+								count={notification.length}
+							/>
 							<BellIcon />
 						</MenuButton>
-						{/* <MenuList/> */}
+						<MenuList pl={2}>
+							{!notification.length && 'No New messages'}
+							{notification.map((notif) => (
+								<MenuItem
+									key={notif._id}
+									onClick={() => {
+										setSelectedChat(notif.chat)
+										setNotification(notification.filter((n) => n !== notif))
+									}}
+								>
+									{notif.chat.isGroupChat
+										? `New message in ${notification.chat.chatName}`
+										: `New Message from ${getSender(user, notif.chat.users)}`}
+								</MenuItem>
+							))}
+						</MenuList>
 					</Menu>
 					<Menu>
 						<MenuButton as={Button} rightIcon={<ChevronDownIcon />}>

@@ -17,18 +17,30 @@ import { UpdateGroupModal } from './UpdateGroupModal'
 import axios from 'axios'
 import { ScrollableChat } from './ScrollableChat'
 import io from 'socket.io-client'
+import Lottie from 'react-lottie'
+import animationData from '../../animation/typing.json'
 
 const ENDPOINT = 'http://localhost:5000'
 let socket, selectedChatCompare
 
 export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
-	const { user, selectedChat, setSelectedChat } = ChatState()
+	const { user, selectedChat, setSelectedChat, notification, setNotification } =
+		ChatState()
 	const [messages, setMessages] = useState([])
 	const [loading, setLoading] = useState(false)
 	const [socketConnected, setSocketConnected] = useState(false)
 	const [typing, setTyping] = useState(false)
 	const [isTyping, setIsTyping] = useState(false)
 	const [newMessage, setnewMessage] = useState('')
+
+	const defaultOptions = {
+		loop: true,
+		autoplay: true,
+		animationData: animationData,
+		rendererSettings: {
+			preserveAspectRatio: 'xMidYMid slice',
+		},
+	}
 
 	const toast = useToast()
 	useEffect(() => {
@@ -49,7 +61,10 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 				!selectedChatCompare ||
 				selectedChatCompare._id !== newMessageRecieved.chat._id
 			) {
-				// give notif
+				if (!notification.includes(newMessageRecieved)) {
+					setNotification([newMessageRecieved, ...notification])
+					setFetchAgain(!fetchAgain)
+				}
 			} else {
 				setMessages([...messages, newMessageRecieved])
 			}
@@ -200,7 +215,17 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 							</div>
 						)}
 						<FormControl onKeyDown={sendMessage} isRequired mt={3}>
-							{isTyping ? <div>Typing</div> : <></>}
+							{isTyping ? (
+								<div>
+									<Lottie
+										options={defaultOptions}
+										width={70}
+										style={{ marginBottom: 15, marginLeft: 0 }}
+									/>
+								</div>
+							) : (
+								<></>
+							)}
 
 							<Input
 								variant='filled'
