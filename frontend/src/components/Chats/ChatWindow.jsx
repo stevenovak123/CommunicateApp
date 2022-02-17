@@ -24,7 +24,8 @@ const ENDPOINT = 'http://localhost:5000'
 let socket, selectedChatCompare
 
 export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
-	const { user, selectedChat, setSelectedChat } = ChatState()
+	const { user, selectedChat, setSelectedChat, notification, setNotification } =
+		ChatState()
 	const [messages, setMessages] = useState([])
 	const [loading, setLoading] = useState(false)
 	const [socketConnected, setSocketConnected] = useState(false)
@@ -60,7 +61,10 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 				!selectedChatCompare ||
 				selectedChatCompare._id !== newMessageRecieved.chat._id
 			) {
-				// give notif
+				if (!notification.includes(newMessageRecieved)) {
+					setNotification([newMessageRecieved, ...notification])
+					setFetchAgain(!fetchAgain)
+				}
 			} else {
 				setMessages([...messages, newMessageRecieved])
 			}
