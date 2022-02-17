@@ -88,6 +88,7 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 
 	const sendMessage = async (event) => {
 		if (event.key === 'Enter' && newMessage) {
+			socket.emit('typing stopped', selectedChat._id)
 			try {
 				const config = {
 					headers: {
@@ -121,6 +122,22 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 
 	const typingHandler = (e) => {
 		setnewMessage(e.target.value)
+		if (socketConnected) return
+		if (!typing) {
+			setTyping(true)
+			socket.emit('typing', selectedChat._id)
+		}
+		// timeout to decide if not typing
+		let lastTypeTime = new Date().getTime()
+		let timerLength = 3000
+		setTimeout(() => {
+			let timeNow = new Date().getTime()
+			let timeDifference = timeNow - lastTypeTime
+			if (timeDifference >= timerLength && typing) {
+				socket.emit('typing stopped', selectedChat._id)
+				setTyping(false)
+			}
+		}, timerLength)
 	}
 
 	return (
@@ -183,6 +200,8 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 							</div>
 						)}
 						<FormControl onKeyDown={sendMessage} isRequired mt={3}>
+							{isTyping ? <div>Typing</div> : <></>}
+
 							<Input
 								variant='filled'
 								bg='#F8f8f8'
