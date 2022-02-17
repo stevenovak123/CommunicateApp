@@ -16,13 +16,45 @@ import { getSender, getSenderInfo } from '../config/ChatLogic'
 import { UpdateGroupModal } from './UpdateGroupModal'
 import axios from 'axios'
 import { ScrollableChat } from './ScrollableChat'
+import io from 'socket.io-client'
+
+const ENDPOINT = 'http://localhost:5000'
+let socket, selectedChatCompare
+
 export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 	const { user, selectedChat, setSelectedChat } = ChatState()
 	const [messages, setMessages] = useState([])
 	const [loading, setLoading] = useState(false)
+	const [socketConnected, setSocketConnected] = useState(false)
+	const [typing, setTyping] = useState(false)
+	const [isTyping, setIsTyping] = useState(false)
 	const [newMessage, setnewMessage] = useState('')
 
 	const toast = useToast()
+	useEffect(() => {
+		fetchMessages()
+		selectedChatCompare = selectedChat
+	}, [selectedChat])
+
+	useEffect(() => {
+		socket = io(ENDPOINT)
+		socket.emit('setup', user)
+		socket.on('connection', () => setSocketConnected(true))
+		socket.on('typing', () => setIsTyping(true))
+		socket.on('typing stopped', () => setIsTyping(false))
+	}, [])
+	useEffect(() => {
+		socket.on('message recieved', (newMessageRecieved) => {
+			if (
+				!selectedChatCompare ||
+				selectedChatCompare._id !== newMessageRecieved.chat._id
+			) {
+				// give notif
+			} else {
+				setMessages([...messages, newMessageRecieved])
+			}
+		})
+	})
 
 	const fetchMessages = async () => {
 		if (!selectedChat) {
@@ -40,8 +72,8 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 				config
 			)
 			setMessages(data)
-			console.log(data)
 			setLoading(false)
+			socket.emit('join chat', selectedChat._id)
 		} catch (error) {
 			toast({
 				title: 'Error Occured',
@@ -72,9 +104,8 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 					},
 					config
 				)
-
+				socket.emit('new message', data)
 				setMessages([...messages, data])
-				console.log(data)
 			} catch (error) {
 				toast({
 					title: 'Error Occured',
@@ -91,9 +122,7 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 	const typingHandler = (e) => {
 		setnewMessage(e.target.value)
 	}
-	useEffect(() => {
-		fetchMessages()
-	}, [selectedChat])
+
 	return (
 		<>
 			{selectedChat ? (
