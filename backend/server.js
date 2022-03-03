@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
 		socket.leave(userData._id)
 	})
 })
-// video calling functionality
+// * video calling functionality
 
 io.on('videoConnection', (socket) => {
 	socket.emit('me', socket.id)
