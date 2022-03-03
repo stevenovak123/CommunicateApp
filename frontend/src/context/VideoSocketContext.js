@@ -11,6 +11,7 @@ const ContextProvider = ({ children }) => {
 	const [call, setCall] = useState({})
 	const [callAccepted, setCallAccepted] = useState(false)
 	const [callEnded, setCallEnded] = useState(false)
+	const [name, setName] = useState('')
 
 	const myVideo = useRef()
 	const userVideo = useRef()
@@ -48,10 +49,54 @@ const ContextProvider = ({ children }) => {
 
 		connectionRef.current = peer
 	}
-	const callUser = () => {}
-	const leaveCall = () => {}
+	const callUser = (id) => {
+		const peer = new Peer({
+			initiator: false,
+			trickle: false,
+			stream,
+		})
+		peer.on('signal', (data) => {
+			socket.emit('callUser', {
+				userToCall: id,
+				signalData: data,
+				from: me,
+				name,
+			})
+		})
+
+		peer.on('stream', (currentStream) => {
+			userVideo.current.srcObject = currentStream
+		})
+		socket.io('callaccepted', (signal) => {
+			setCallAccepted(true)
+			peer.signal(signal)
+		})
+		connectionRef.current = peer
+	}
+	const leaveCall = () => {
+		setCallEnded(true)
+		connectionRef.current.destroy()
+		window.location.reload()
+	}
+	return (
+		<SocketContext.Provider
+			value={{
+				call,
+				callAccepted,
+				myVideo,
+				userVideo,
+				stream,
+				name,
+				setName,
+				callEnded,
+				callUser,
+				leaveCall,
+				answerCall,
+			}}
+		>
+			{children}
+		</SocketContext.Provider>
+	)
 }
 
-export const VideoSocketContext = () => {
-	return <div>VideoSocketContext</div>
-}
+export { ContextProvider, SocketContext }
