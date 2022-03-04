@@ -38,6 +38,7 @@ const io = require('socket.io')(server, {
 	pingTimeout: 60000,
 	cors: {
 		origin: 'http://localhost:3000',
+		methods: ['GET', 'POST', 'PUT'],
 	},
 })
 
@@ -68,12 +69,13 @@ io.on('connection', (socket) => {
 		socket.leave(userData._id)
 	})
 })
+
 // * video calling functionality
 
 io.on('videoConnection', (socket) => {
 	socket.emit('me', socket.id)
 	socket.on('videoDisconnect', () => {
-		socket.broadcast.emit('Call Ended')
+		socket.broadcast.emit('callEnded')
 	})
 	socket.on('callUser', ({ userToCall, signalData, from, name }) => {
 		io.to(userToCall).emit('callUser', {
