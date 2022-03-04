@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import './styles.css'
 import { ChatState } from '../../context/ChatProvider'
-import { ArrowBackIcon } from '@chakra-ui/icons'
+import { ArrowBackIcon, PhoneIcon } from '@chakra-ui/icons'
 import { ProfileModal } from '../ProfileModal'
 import { getSender, getSenderInfo } from '../config/ChatLogic'
 import { UpdateGroupModal } from './UpdateGroupModal'
@@ -19,6 +19,7 @@ import { ScrollableChat } from './ScrollableChat'
 import io from 'socket.io-client'
 import Lottie from 'react-lottie'
 import animationData from '../../animation/typing.json'
+import { Link } from 'react-router-dom'
 
 const ENDPOINT = 'http://localhost:5000'
 let socket, selectedChatCompare
@@ -174,6 +175,9 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 							icon={<ArrowBackIcon />}
 							onClick={() => setSelectedChat('')}
 						/>
+						<a href='/video' target='_blank'>
+							<IconButton icon={<PhoneIcon />} />
+						</a>
 						{!selectedChat.isGroupChat ? (
 							<>
 								{getSender(user, selectedChat.users)}
