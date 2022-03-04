@@ -6,6 +6,8 @@ const userRoutes = require('./routes/userRoutes')
 const chatRoutes = require('./routes/chatRoutes')
 const messageRoutes = require('./routes/messageRoutes')
 const { notFound, errorHandler } = require('./middleware/errorMiddleware')
+const cors = require('cors')
+
 // initialize backend
 const app = express()
 
@@ -23,6 +25,7 @@ app.use('/api/message', messageRoutes)
 app.use(notFound)
 
 app.use(errorHandler)
+app.use(cors())
 
 const PORT = process.env.PORT || 8000
 
@@ -35,6 +38,7 @@ const io = require('socket.io')(server, {
 	pingTimeout: 60000,
 	cors: {
 		origin: 'http://localhost:3000',
+		methods: ['GET', 'POST', 'PUT'],
 	},
 })
 
@@ -63,5 +67,24 @@ io.on('connection', (socket) => {
 	socket.off('setup', () => {
 		console.log(`User Disconnected`)
 		socket.leave(userData._id)
+	})
+})
+
+// * video calling functionality
+
+io.on('videoConnection', (socket) => {
+	socket.emit('me', socket.id)
+	socket.on('videoDisconnect', () => {
+		socket.broadcast.emit('callEnded')
+	})
+	socket.on('callUser', ({ userToCall, signalData, from, name }) => {
+		io.to(userToCall).emit('callUser', {
+			signal: signalData,
+			from,
+			name,
+		})
+		socket.on('answerCall', (data) => {
+			io.to(data.to).emit('callaccepted', data.signal)
+		})
 	})
 })

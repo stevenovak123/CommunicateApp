@@ -1,12 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
-
 .App {
-	font-family: 'Work Sans', sans-serif;
 	min-height: 100vh;
-	display: flex;
-	background-image: url('./background.jpg');
+	background: url('https://img.freepik.com/free-vector/gradient-wallpaper-background_1159-5359.jpg?t=st=1646307208~exp=1646307808~hmac=104dd0f7db575bb1f748f60e6e9ef39a2375f22f41bcaaff3dfaa5655c201088&w=1380');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 	background-size: cover;
-	background-position: center;
 }
 ::-webkit-scrollbar {
 	width: 0px;
@@ -16,4 +13,8 @@
 }
 ::-webkit-scrollbar-thumb:hover {
 	background: #555;
+}
+* {
+	margin: 0;
+	padding: 0;
 }
