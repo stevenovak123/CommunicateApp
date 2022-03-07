@@ -19,7 +19,6 @@ import { ScrollableChat } from './ScrollableChat'
 import io from 'socket.io-client'
 import Lottie from 'react-lottie'
 import animationData from '../../animation/typing.json'
-import { Link } from 'react-router-dom'
 
 const ENDPOINT = 'http://localhost:5000'
 let socket, selectedChatCompare
