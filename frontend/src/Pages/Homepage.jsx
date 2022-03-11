@@ -34,7 +34,7 @@ export const Homepage = () => {
 				borderRadius='lg'
 				borderWidth='1px'
 			>
-				<Text fontSize='4xl'>Chat App</Text>
+				<Text fontSize='4xl'>HyperChat</Text>
 			</Box>
 			<Box
 				color='black'
