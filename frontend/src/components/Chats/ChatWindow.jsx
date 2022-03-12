@@ -174,11 +174,12 @@ export const ChatWindow = ({ fetchAgain, setFetchAgain }) => {
 							icon={<ArrowBackIcon />}
 							onClick={() => setSelectedChat('')}
 						/>
-						<a href='/video' target='_blank'>
-							<IconButton icon={<PhoneIcon />} />
-						</a>
+
 						{!selectedChat.isGroupChat ? (
 							<>
+								<a href='/video' target='_blank'>
+									<IconButton icon={<PhoneIcon />} />
+								</a>
 								{getSender(user, selectedChat.users)}
 								<ProfileModal user={getSenderInfo(user, selectedChat.users)} />
 							</>
