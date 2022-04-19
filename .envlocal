@@ -1,0 +1,7 @@
+PORT = 5000
+MONGO_URI=
+JWT_SECRET=
+NODE_ENV=developement
+
+
+// add your own JWT_SECRET and MONGO_URI
